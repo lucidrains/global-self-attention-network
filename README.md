@@ -24,7 +24,8 @@ gsa = GSA(
     dim = 3,
     dim_out = 64,
     dim_key = 32,
-    heads = 8
+    heads = 8,
+    rel_pos_length = 256  # in paper, set to max(height, width)
 )
 
 x = torch.randn(1, 3, 256, 256)
