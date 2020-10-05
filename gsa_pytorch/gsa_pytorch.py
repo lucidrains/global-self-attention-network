@@ -76,5 +76,5 @@ class GSA(nn.Module):
 
             content_out = content_out + rel_pos_out
 
-        content_out = content_out.reshape(b, -1, x, y).contiguous()
+        content_out = rearrange(content_out, '(b h) c x y -> b (h c) x y', h = h)
         return self.to_out(content_out)
