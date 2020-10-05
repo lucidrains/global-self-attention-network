@@ -12,6 +12,9 @@ def exists(val):
     return val is not None
 
 def calc_reindexing_tensor(l, L, device):
+    """
+    Appendix B - (5)
+    """
     x = torch.arange(l, device = device)[:, None, None]
     i = torch.arange(l, device = device)[None, :, None]
     r = torch.arange(L, device = device)[None, None, :]
@@ -53,6 +56,8 @@ class GSA(nn.Module):
 
         content_out = einsum('nde,ndxy->nexy', context, content_q)
 
+        # this largely follows the mathematical implementation details
+        # spelled out in appendix B (6) - (8)
         if exists(self.rel_pos_length):
             Ix = calc_reindexing_tensor(x, L, device)
             Px = einsum('xir,rd->xid', Ix, self.rel_rows)
