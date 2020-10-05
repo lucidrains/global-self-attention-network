@@ -1,4 +1,6 @@
-## Global Self-attention Network (wip)
+<img src="./gsa.png" width="500px"></img>
+
+## Global Self-attention Network
 
 An implementation of Global Self-Attention Network, which proposes an all-attention solution using Linear Global Attention paired with Positional Axial Attention for images
 
