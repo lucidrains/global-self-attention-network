@@ -6,7 +6,7 @@ An implementation of <a href="https://openreview.net/forum?id=KiFeuZu24k">Global
 
 They use a previously discovered <a href="https://arxiv.org/abs/1812.01243">linear attention variant</a> with a small modification for further gains (no normalization of the queries), paired with relative positional attention, computed axially for efficiency.
 
-The result is an extremely simple circuit composed of 7-8 einsums, 1 softmax, and normalization.
+The result is an extremely simple circuit composed of 8 einsums, 1 softmax, and normalization.
 
 ## Install
 
