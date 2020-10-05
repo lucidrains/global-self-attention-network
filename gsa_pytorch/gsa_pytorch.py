@@ -2,11 +2,14 @@ import torch
 import torch.nn.functional as F
 from torch import nn, einsum
 from einops import rearrange
+from inspect import isfunction
 
 # helpers
 
 def default(val, d):
-    return val if exists(val) else d
+    if exists(val):
+        return val
+    return d() if isfunction(d) else d
 
 def exists(val):
     return val is not None
@@ -69,7 +72,9 @@ class GSA(nn.Module):
 
             Yh = self.norm(Yh)
 
-            Iy = calc_reindexing_tensor(y, L, device)
+            Iy = Ix if x == y else None
+            Iy = default(Iy, lambda: calc_reindexing_tensor(y, L, device))
+
             Py = einsum('xir,rd->xid', Iy, self.rel_columns)
             Sy = einsum('ndxy,xid->nixy', q, Py)
             rel_pos_out = einsum('nixy,neiy->nexy', Sy, Yh)
