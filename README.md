@@ -2,7 +2,11 @@
 
 ## Global Self-attention Network
 
-An implementation of Global Self-Attention Network, which proposes an all-attention solution using Linear Global Attention paired with Positional Axial Attention for images
+An implementation of Global Self-Attention Network, which proposes an all-attention vision backbone that achieves better results than convolutions with less parameters and compute.
+
+They use a previously discovered <a href="https://arxiv.org/abs/1812.01243">linear attention variant</a> with a small modification for further gains (no normalization of the queries), paired with relative positional attention, computed axially for efficiency.
+
+The result is an extremely simple circuit composed of 7-8 einsums, 1 softmax, and normalization.
 
 ## Citations
 
