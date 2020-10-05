@@ -1,6 +1,6 @@
 <img src="./gsa.png" width="500px"></img>
 
-## Global Self-attention Network (wip)
+## Global Self-attention Network
 
 An implementation of <a href="https://openreview.net/forum?id=KiFeuZu24k">Global Self-Attention Network</a>, which proposes an all-attention vision backbone that achieves better results than convolutions with less parameters and compute.
 
@@ -25,7 +25,7 @@ gsa = GSA(
     dim_out = 64,
     dim_key = 32,
     heads = 8,
-    rel_pos_length = 256  # in paper, set to max(height, width)
+    rel_pos_length = 256  # in paper, set to max(height, width). you can also turn this off by omitting this line
 )
 
 x = torch.randn(1, 3, 256, 256)
