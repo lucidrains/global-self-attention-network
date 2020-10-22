@@ -20,7 +20,7 @@ def calc_reindexing_tensor(l, L, device):
     """
     x = torch.arange(l, device = device)[:, None, None]
     i = torch.arange(l, device = device)[None, :, None]
-    r = torch.arange(L, device = device)[None, None, :]
+    r = torch.arange(-(L - 1), L, device = device)[None, None, :]
     mask = ((i - x) == r) & ((i - x).abs() <= L)
     return mask.float()
 
@@ -42,9 +42,10 @@ class GSA(nn.Module):
 
         self.rel_pos_length = rel_pos_length
         if exists(rel_pos_length):
+            num_rel_shifts = 2 * rel_pos_length - 1
             self.norm = nn.BatchNorm2d(dim_key)
-            self.rel_rows = nn.Parameter(torch.randn(rel_pos_length, dim_key))
-            self.rel_columns = nn.Parameter(torch.randn(rel_pos_length, dim_key))
+            self.rel_rows = nn.Parameter(torch.randn(num_rel_shifts, dim_key))
+            self.rel_columns = nn.Parameter(torch.randn(num_rel_shifts, dim_key))
 
     def forward(self, img):
         b, c, x, y, h, c_out, L, device = *img.shape, self.heads, self.dim_out, self.rel_pos_length, img.device
@@ -75,11 +76,11 @@ class GSA(nn.Module):
             Iy = Ix if x == y else None
             Iy = default(Iy, lambda: calc_reindexing_tensor(y, L, device))
 
-            Py = einsum('xir,rd->xid', Iy, self.rel_columns)
-            Sy = einsum('ndxy,xid->nixy', q, Py)
-            rel_pos_out = einsum('nixy,neiy->nexy', Sy, Yh)
+            Py = einsum('yir,rd->yid', Iy, self.rel_columns)
+            Sy = einsum('ndxy,yid->nixy', q, Py)
+            rel_pos_out = einsum('nixy,nexi->nexy', Sy, Yh)
 
-            content_out = content_out + rel_pos_out
+            content_out = content_out + rel_pos_out.contiguous()
 
         content_out = rearrange(content_out, '(b h) c x y -> b (h c) x y', h = h)
         return self.to_out(content_out)
