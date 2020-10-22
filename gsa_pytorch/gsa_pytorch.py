@@ -73,9 +73,7 @@ class GSA(nn.Module):
 
             Yh = self.norm(Yh)
 
-            Iy = Ix if x == y else None
-            Iy = default(Iy, lambda: calc_reindexing_tensor(y, L, device))
-
+            Iy = calc_reindexing_tensor(y, L, device)
             Py = einsum('yir,rd->yid', Iy, self.rel_columns)
             Sy = einsum('ndxy,yid->nixy', q, Py)
             rel_pos_out = einsum('nixy,nexi->nexy', Sy, Yh)
